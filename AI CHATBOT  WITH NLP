@@ -1,0 +1,50 @@
+import spacy
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+import random
+
+# Load the spaCy language model
+nlp = spacy.load("en_core_web_sm")
+
+# Initialize NLTK resources
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('wordnet')
+
+# Initialize lemmatizer
+lemmatizer = WordNetLemmatizer()
+
+# Define some simple intents and responses
+intents = {
+    "greeting": ["hello", "hi", "hey", "howdy"],
+    "goodbye": ["bye", "goodbye", "see you later", "take care"],
+    "thanks": ["thanks", "thank you", "appreciate it"],
+    "default": ["Sorry, I don't understand that."]
+}
+
+responses = {
+    "greeting": ["Hi there! How can I assist you?", "Hello! How can I help today?", "Hey! How can I assist you?"],
+    "goodbye": ["Goodbye! Take care.", "See you later!", "Bye! Have a great day."],
+    "thanks": ["You're welcome!", "Glad I could help!", "Anytime!"],
+    "default": ["Sorry, I didn't catch that. Can you rephrase?"]
+}
+
+# Function to preprocess the user's input
+def preprocess_input(text):
+    # Tokenize the text
+    doc = nlp(text)
+    
+    # Remove stopwords and lemmatize words
+    processed_words = [
+        lemmatizer.lemmatize(token.text.lower()) for token in doc if token.text.lower() not in stopwords.words('english') and token.is_alpha
+    ]
+    
+    return processed_words
+
+# Function to determine the intent of the user input
+def get_intent(processed_input):
+    for intent, examples in intents.items():
+        for example in examples:
+            # Compare processed input with intent examples
+            if any(word in processed_input for word i
